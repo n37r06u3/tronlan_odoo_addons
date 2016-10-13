@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate='0'>
+    <template id="assets_backend_web_image_upload" name="web image upload" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/web_image_upload/static/src/js/web_image_upload.js"/>
+            <link rel="stylesheet" href="/web_image_upload/static/src/css/web_image_upload.css"/>
+        </xpath>
+    </template>
+</odoo>

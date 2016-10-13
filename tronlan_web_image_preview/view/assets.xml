@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate='0'>
+    <template id="assets_backend_odoo_web_image_preview" name="web image preview" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo_web_image_preview/static/src/js/web_tree_image_preview.js"/>
+            <script type="text/javascript" src="/odoo_web_image_preview/static/src/js/web_form_image_preview.js"/>
+            <link rel="stylesheet" href="/odoo_web_image_preview/static/src/css/web_image_preview.css"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,121 @@
+<templates xml:space="preserve">
+<t t-name="FieldBinaryFileUpload">
+    <t t-if="!widget.get('effective_readonly')">
+        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0" t-att-style="widget.node.attrs.style">
+        <tr>
+            <td>
+                <input type="text" size="1" readonly="readonly"
+                    t-att-name="widget.name"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                    class="field_binary"
+                />
+            </td>
+            <td class="oe_form_binary" nowrap="true">
+                <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <td>
+                        <t t-call="HiddenInputFileUpload">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
+                            <button class="oe_button oe_field_button" type="button">
+                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                                <span>Select</span>
+                            </button>
+                        </t>
+                    </td>
+                    <td>
+                        <a class="oe_form_binary_file_save_data">
+                            <button class="oe_button oe_form_binary_file_save" type="button" title="Save As">
+                                <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
+                                <span>Save As</span>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
+                            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
+                            <span>Clear</span>
+                        </button>
+                    </td>
+                </tr>
+                </table>
+            </td>
+            <td class="oe_form_binary_progress" style="display: none" nowrap="true">
+                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
+                <b>Uploading ...</b>
+            </td>
+        </tr>
+        </table>
+    </t>
+    <t t-if="widget.get('effective_readonly')">
+        <span t-att-style="widget.node.attrs.style">
+            <a href="javascript:void(0)" class="oe_form_uri"/>
+        </span>
+    </t>
+</t>
+    <t t-name="HiddenInputFileUpload">
+    <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+        <form class="o_form_binary_form" t-att-target="fileupload_id"
+              method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
+            <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+            <t t-raw="0"/>
+            <input type="file" multiple="true" class="o_form_input_file" name="ufile" t-if="widget.widget!='image'"/>
+            <input type="file" class="o_form_input_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
+        </form>
+        <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
+</t>
+
+
+
+    <table t-name="UploadListView" class="oe_list_content">
+       <input type="file" multiple="true" class="o_form_file_upload_input"/>
+    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
+    <thead>
+        <tr t-if="(!!options.action_buttons and !options.$buttons) or (!!options.pager and !options.$pager)">
+            <th t-att-colspan="columns_count">
+                <div class="oe_list_buttons"/>
+                <div class="oe_list_sidebar"/>
+                <div class="oe_list_pager"/>
+            </th>
+        </tr>
+        <tr t-if="options.header" class="oe_list_header_columns">
+            <t t-foreach="columns" t-as="column">
+                <th t-if="column.meta">
+                    <t t-esc="column.string"/>
+                </th>
+            </t>
+            <th t-if="options.selectable" width="1"  >
+                <input type="checkbox" class="oe_list_record_selector"/>
+            </th>
+            <t t-foreach="columns" t-as="column">
+                <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}"><div>
+                    <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
+                </div></th>
+            </t>
+            <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td t-if="options.selectable"/>
+            <td t-foreach="aggregate_columns" t-as="column" class="oe_list_footer oe_number"
+                t-att-data-field="column.id" t-att-title="column.label">
+            </td>
+            <td t-if="options.deletable" class="oe_list_record_delete"/>
+        </tr>
+    </tfoot>
+</table>
+
+
+<t t-name="One2Many.uploadlistview" t-extend="UploadListView">
+    <t t-jquery="thead > tr:first">
+        this.removeAttr('t-if');
+    </t>
+</t>
+
+</templates>
